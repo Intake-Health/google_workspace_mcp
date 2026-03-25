@@ -7,6 +7,9 @@ import sys
 from importlib import metadata, import_module
 from dotenv import load_dotenv
 
+dotenv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+load_dotenv(dotenv_path=dotenv_path)
+
 # Prevent any stray startup output on macOS (e.g. platform identifiers) from
 # corrupting the MCP JSON-RPC handshake on stdout. We capture anything written
 # to stdout during module-level initialisation and replay it to stderr so that
@@ -32,9 +35,6 @@ from core.tool_registry import (  # noqa: E402
     wrap_server_tool_method,
     filter_server_tools,
 )
-
-dotenv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-load_dotenv(dotenv_path=dotenv_path)
 
 # Suppress googleapiclient discovery cache warning
 logging.getLogger("googleapiclient.discovery_cache").setLevel(logging.ERROR)
