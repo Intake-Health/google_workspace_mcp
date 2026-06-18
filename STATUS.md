@@ -48,6 +48,24 @@ server there). DEPLOY.md describes the now-retired topology.
 the local stdio multi-user server on uri/claw (creds already staged); add claw to sync
 targets when it exists.
 
+## Added 2026-06-18 — Apps Script executor + fork bug fix
+
+- **Hands-off Apps Script execution stood up.** Standing executor script "Claude Apps Script
+  Executor" (ID `19_5cGYD4F5BjB3u3KKAUdD5FVpytfzLSuCja7H9nfxyk4QMXJrB2xEFO`) with
+  `exec(code)`/`ping()`, API-executable deployment, GCP project set to `149605203386`
+  (the one editor-only step Michael did). Verified end to end: drove arbitrary Apps Script
+  via `run_script_function(exec, [code], dev_mode=true)` to freeze panes / autosize columns /
+  add borders on the test sheet — things `format_sheet_range` can't do. See CLAUDE.md
+  "Apps Script executor" for how to drive it (always `dev_mode=true`).
+- **Fixed `script_full` scope bug** in `auth/service_decorator.py` (mapped to
+  `SCRIPT_PROJECTS_SCOPE`) — it caused an infinite re-auth loop on `create_version`. Live
+  install patched too; takes effect on next server restart.
+- **Open follow-up:** silent-refresh-on-expiry quirk — server prompts full re-auth ~hourly
+  on long sessions instead of refreshing the (healthy) refresh token. See CLAUDE.md
+  "Known fork issues".
+- Also created earlier this session: "Top 5 Customers — Sheet Styler" (one-off, standalone)
+  and the test sheet itself (Zoho→Sheets MCP integration demo).
+
 ---
 
 ## (Prior) 2026-06-15

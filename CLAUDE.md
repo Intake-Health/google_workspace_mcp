@@ -62,6 +62,41 @@ a temporary callback server starts on demand even in stdio mode).
 3. The new `<email>.json` lands in the credentials dir.
 4. Run `scripts/sync-creds.sh` to copy it to the other machines.
 
+## Apps Script executor (hands-off code execution)
+
+For Sheets/Docs/Slides work the granular APIs can't do (column resize, freeze panes,
+borders, charts, pivots, cross-app glue), a standing **executor** Apps Script runs
+arbitrary Apps Script as Michael — no editor, no per-script setup:
+
+- Script: **"Claude Apps Script Executor"**, ID
+  `19_5cGYD4F5BjB3u3KKAUdD5FVpytfzLSuCja7H9nfxyk4QMXJrB2xEFO`.
+- `exec(code)` evals a snippet (end it with an expression to return a value) and returns
+  `{ok, result|error}`. `ping()` is a smoke test.
+- Manifest: `executionApi.access = MYSELF`; declared scopes spreadsheets / drive /
+  documents / presentations / calendar (all within the work cred's scope set). The
+  script's **GCP project is set to the published OAuth app's `149605203386`** — that
+  association is the one editor-only manual step; everything else was done via the MCP.
+- **Drive it with** `run_script_function(function_name="exec", parameters=[<code>],
+  dev_mode=true)`. Always use **`dev_mode=true`**: it runs the latest HEAD code (change
+  behavior without redeploying) and avoids the static API-executable deployment
+  (`AKfycby…`), which 404s until a GCP-project change propagates.
+- Security: arbitrary code as Michael, callable only with his OAuth (MYSELF access),
+  limited to consented scopes. Revoke by deleting the deployment or the script.
+
+## Known fork issues
+
+- **`script_full` scope bug (FIXED 2026-06-18):** `create_version` was decorated
+  `@require_google_service("script", "script_full")`, but `SCOPE_GROUPS` had no
+  `script_full` key, so `_resolve_scopes` passed the literal string through as a bogus
+  scope → unsatisfiable required scope → infinite re-auth loop. Fixed by mapping
+  `script_full → SCRIPT_PROJECTS_SCOPE` in `auth/service_decorator.py`. (Workaround used
+  meanwhile: `manage_deployment` create, which self-versions under the valid
+  `script_deployments` scope.) Live server picks up the fix on next restart.
+- **Silent-refresh-on-expiry quirk (open):** on long sessions, once the work access token
+  passes its ~1h expiry the server prompted full re-auth instead of silently refreshing
+  via the (healthy) refresh token. Re-auth is a workaround; the refresh token itself is
+  fine (verified). Investigate the session credential cache / refresh path.
+
 ## Legacy / other deployments
 
 `uri` **previously** ran an older **single-user, gmail+drive, streamable-http** service
