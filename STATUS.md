@@ -65,6 +65,13 @@ targets when it exists.
   "Known fork issues".
 - Also created earlier this session: "Top 5 Customers — Sheet Styler" (one-off, standalone)
   and the test sheet itself (Zoho→Sheets MCP integration demo).
+- **Default Intake brand sheet styling.** Pulled brand tokens from intake.health →
+  `intake-health/resources/brand/brand.json` (blue `#1774D1`, tint `#E8F1FB`, ink, **Nunito**
+  font — site uses Manrope but Nunito chosen for produced materials). Added permanent
+  `applyBrandStyle(spreadsheetId, sheetName)` to the executor; applied by default to sheets
+  we create / are asked to style (enforced via the `google-sheets-brand-styling` memory).
+  Explicit invocation: `/brand-sheet <url>` skill at
+  `intake-health/.claude/skills/brand-sheet/` (appears after a Claude Code reload).
 
 ---
 
