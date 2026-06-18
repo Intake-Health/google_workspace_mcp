@@ -1,6 +1,11 @@
 # Intake Deployment
 
-This fork is deployed on `uri` as a tailnet-only MCP service for shared Gmail access across projects.
+> **RETIRED 2026-06-18.** This uri tailnet HTTP deployment has been decommissioned (launchd
+> service booted out + plist removed, Tailscale Serve `:10001` off). It is superseded by the
+> local **stdio multi-user** model — see `CLAUDE.md` and `STATUS.md`. Kept for historical
+> reference in case the topology is ever rebuilt.
+
+This fork was deployed on `uri` as a tailnet-only MCP service for shared Gmail access across projects.
 
 ## Live Topology
 
