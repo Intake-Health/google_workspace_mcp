@@ -82,6 +82,12 @@ arbitrary Apps Script as Michael — no editor, no per-script setup:
   (`AKfycby…`), which 404s until a GCP-project change propagates.
 - Security: arbitrary code as Michael, callable only with his OAuth (MYSELF access),
   limited to consented scopes. Revoke by deleting the deployment or the script.
+- **`applyBrandStyle(spreadsheetId, sheetName)`** is a permanent function in the executor
+  that applies the default **Intake brand** sheet style (brand-blue `#1774D1` frozen header,
+  white bold Manrope; Manrope body; brand-tint `#E8F1FB` banding; neutral borders; auto-fit
+  columns). Visual-only — apply number formats separately. Brand tokens (pulled from
+  intake.health) live in `intake-health/resources/brand/brand.json`. **Apply this by default
+  to sheets we create or are asked to style** (see the `google-sheets-brand-styling` memory).
 
 ## Known fork issues
 
